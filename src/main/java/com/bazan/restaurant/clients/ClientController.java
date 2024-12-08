@@ -13,11 +13,11 @@ import java.util.List;
 @RequestMapping("/clients")
 public class ClientController {
 
-    private final IClientRepository clientRepository;
+    private final IClientService clientService;
 
     @GetMapping
     public ResponseEntity<List<Client>> getAllClients() {
-        return ResponseEntity.ok(clientRepository.findAll());
+        return ResponseEntity.ok(clientService.getAll());
     }
 
     @PostMapping
@@ -25,15 +25,11 @@ public class ClientController {
             @RequestBody ClientRequest request
     ) {
         try {
-            var client = Client.create(
-                    request.getName(),
-                    request.getEmail(),
-                    request.getBirthDay());
-            var result = clientRepository.save(client);
+            var result = clientService.create(request);
             var response = ClientResponse.Success(result, "Client created successfully");
             return ResponseEntity.ok(response);
         } catch (Exception ex) {
-            var response = ClientResponse.Failure(ex.getLocalizedMessage());
+            var response = ClientResponse.Failure(ex.getMessage());
             return ResponseEntity.badRequest().body(response);
         }
     }
