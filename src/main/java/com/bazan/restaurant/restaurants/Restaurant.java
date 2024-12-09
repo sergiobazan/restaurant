@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -32,5 +33,32 @@ public class Restaurant {
     private Owner owner;
 
     @OneToMany(mappedBy = "restaurant")
-    private HashSet<Menu> menus = new HashSet<>();
+    private Set<Menu> menus = new HashSet<>();
+
+    private Restaurant(
+            String name,
+            String address,
+            String description,
+            LocalDateTime openAt,
+            LocalDateTime closeAt,
+            Owner owner
+    ) {
+        this.name = name;
+        this.address = address;
+        this.description = description;
+        this.openAt = openAt;
+        this.closeAt = closeAt;
+        this.owner = owner;
+    }
+
+    public static Restaurant create(
+            String name,
+            String address,
+            String description,
+            LocalDateTime openAt,
+            LocalDateTime closeAt,
+            Owner owner
+    ) {
+        return new Restaurant(name, address, description, openAt, closeAt, owner);
+    }
 }
