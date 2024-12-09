@@ -13,6 +13,7 @@ public class MenuService implements IMenuService {
 
     private final IMenuRepository menuRepository;
     private final IRestaurantRepository restaurantRepository;
+    private final IDishRepository dishRepository;
 
     @Override
     public List<Menu> getAll() {
@@ -32,5 +33,19 @@ public class MenuService implements IMenuService {
                 restaurant
         );
         return menuRepository.save(menu);
+    }
+
+    @Override
+    public void addDish(long menuId, long dishId) throws Exception {
+        var dish = dishRepository
+                .findById(dishId)
+                .orElseThrow(() -> new Exception("Dish with given Id not found"));
+        var menu = menuRepository
+                .findById(menuId)
+                .orElseThrow(() -> new Exception("Menu with given Id not found"));
+        
+        menu.getDishes().add(dish);
+        dish.getMenus().add(menu);
+        menuRepository.save(menu);
     }
 }
