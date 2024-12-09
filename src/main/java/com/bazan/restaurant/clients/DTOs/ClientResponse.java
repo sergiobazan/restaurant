@@ -5,7 +5,7 @@ import com.bazan.restaurant.shared.DTOs.Response;
 
 public class ClientResponse extends Response<Client> {
 
-    public ClientResponse(boolean success, String message, Client data) {
+    private ClientResponse(boolean success, String message, Client data) {
         super(success, message, data);
     }
 

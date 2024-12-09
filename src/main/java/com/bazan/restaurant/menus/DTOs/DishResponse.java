@@ -5,7 +5,7 @@ import com.bazan.restaurant.shared.DTOs.Response;
 
 public class DishResponse extends Response<Dish> {
 
-    public DishResponse(boolean success, String message, Dish data) {
+    private DishResponse(boolean success, String message, Dish data) {
         super(success, message, data);
     }
 

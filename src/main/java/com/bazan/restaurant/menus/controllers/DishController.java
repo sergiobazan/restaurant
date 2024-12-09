@@ -1,7 +1,9 @@
-package com.bazan.restaurant.menus;
+package com.bazan.restaurant.menus.controllers;
 
 import com.bazan.restaurant.menus.DTOs.DishRequest;
 import com.bazan.restaurant.menus.DTOs.DishResponse;
+import com.bazan.restaurant.menus.Dish;
+import com.bazan.restaurant.menus.IDishService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
