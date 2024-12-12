@@ -8,5 +8,5 @@ import java.util.List;
 public interface IUserService {
     List<UserProfile> getAll();
     UserProfile create(UserRequest userProfile);
-    String login(LoginRequest loginRequest);
+    String login(LoginRequest loginRequest) throws Exception;
 }

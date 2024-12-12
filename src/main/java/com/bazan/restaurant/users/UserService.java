@@ -1,5 +1,6 @@
 package com.bazan.restaurant.users;
 
+import com.bazan.restaurant.shared.services.IJwtService;
 import com.bazan.restaurant.users.DTOs.LoginRequest;
 import com.bazan.restaurant.users.DTOs.UserRequest;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ public class UserService implements IUserService {
 
     private final IUserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
+    private final IJwtService jwtService;
 
     @Override
     public List<UserProfile> getAll() {
@@ -33,7 +35,15 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public String login(LoginRequest loginRequest) {
-        return "token";
+    public String login(LoginRequest loginRequest) throws Exception {
+        var user = userRepository.findByEmail(loginRequest.email());
+
+        if (user == null)
+            throw new Exception("Invalid Credentials");
+
+        if (!encoder.matches(loginRequest.password(), user.getPassword()))
+            throw new Exception("Invalid Credentials");
+
+        return jwtService.generateToken(user);
     }
 }

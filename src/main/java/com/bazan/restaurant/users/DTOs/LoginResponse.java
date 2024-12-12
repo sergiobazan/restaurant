@@ -13,6 +13,6 @@ public class LoginResponse extends Response<String> {
     }
 
     public static LoginResponse Failure(String message) {
-        return new LoginResponse(false, "Login Failed", null);
+        return new LoginResponse(false, message, null);
     }
 }
