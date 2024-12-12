@@ -1,5 +1,7 @@
 package com.bazan.restaurant.users;
 
+import com.bazan.restaurant.users.DTOs.LoginRequest;
+import com.bazan.restaurant.users.DTOs.LoginResponse;
 import com.bazan.restaurant.users.DTOs.UserRequest;
 import com.bazan.restaurant.users.DTOs.UserResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,20 @@ public class UserController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             var response = UserResponse.Failure(e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(
+            @RequestBody LoginRequest loginRequest
+    ) {
+        try {
+            var token = userService.login(loginRequest);
+            var response = LoginResponse.Success(token);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            var response = LoginResponse.Failure(e.getMessage());
             return ResponseEntity.badRequest().body(response);
         }
     }

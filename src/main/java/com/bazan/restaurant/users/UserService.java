@@ -1,7 +1,9 @@
 package com.bazan.restaurant.users;
 
+import com.bazan.restaurant.users.DTOs.LoginRequest;
 import com.bazan.restaurant.users.DTOs.UserRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.List;
 public class UserService implements IUserService {
 
     private final IUserRepository userRepository;
+    private final BCryptPasswordEncoder encoder;
 
     @Override
     public List<UserProfile> getAll() {
@@ -22,9 +25,15 @@ public class UserService implements IUserService {
         UserProfile user = UserProfile.Create(
                 userProfile.name(),
                 userProfile.email(),
+                encoder.encode(userProfile.password()),
                 userProfile.birthDay(),
                 userProfile.role()
         );
         return userRepository.save(user);
+    }
+
+    @Override
+    public String login(LoginRequest loginRequest) {
+        return "token";
     }
 }
