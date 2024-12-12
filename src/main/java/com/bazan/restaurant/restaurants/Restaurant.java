@@ -1,7 +1,7 @@
 package com.bazan.restaurant.restaurants;
 
 import com.bazan.restaurant.menus.Menu;
-import com.bazan.restaurant.owners.Owner;
+import com.bazan.restaurant.users.UserProfile;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +30,7 @@ public class Restaurant {
 
     @OneToOne
     @JoinColumn(name = "owner_id")
-    private Owner owner;
+    private UserProfile owner;
 
     @OneToMany(mappedBy = "restaurant")
     private Set<Menu> menus = new HashSet<>();
@@ -41,7 +41,7 @@ public class Restaurant {
             String description,
             LocalDateTime openAt,
             LocalDateTime closeAt,
-            Owner owner
+            UserProfile owner
     ) {
         this.name = name;
         this.address = address;
@@ -57,7 +57,7 @@ public class Restaurant {
             String description,
             LocalDateTime openAt,
             LocalDateTime closeAt,
-            Owner owner
+            UserProfile owner
     ) {
         return new Restaurant(name, address, description, openAt, closeAt, owner);
     }

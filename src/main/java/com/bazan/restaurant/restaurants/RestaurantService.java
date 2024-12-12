@@ -1,7 +1,7 @@
 package com.bazan.restaurant.restaurants;
 
-import com.bazan.restaurant.owners.IOwnerRepository;
 import com.bazan.restaurant.restaurants.DTOs.RestaurantRequest;
+import com.bazan.restaurant.users.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class RestaurantService implements IRestaurantService {
 
     private final IRestaurantRepository restaurantRepository;
-    private final IOwnerRepository ownerRepository;
+    private final IUserRepository userRepository;
 
     @Override
     public List<Restaurant> getAll() {
@@ -21,9 +21,13 @@ public class RestaurantService implements IRestaurantService {
 
     @Override
     public Restaurant create(RestaurantRequest restaurantRequest) throws Exception {
-        var owner = ownerRepository
+        var owner = userRepository
                 .findById(restaurantRequest.ownerId())
                 .orElseThrow(() -> new Exception("Owner was not found"));
+
+        if (!owner.getRole().equals("OWNER"))
+            throw new Exception("Only an Owner can create a restaurant");
+
         var restaurant = Restaurant.create(
                 restaurantRequest.name(),
                 restaurantRequest.address(),
