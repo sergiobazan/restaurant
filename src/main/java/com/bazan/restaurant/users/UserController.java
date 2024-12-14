@@ -6,9 +6,7 @@ import com.bazan.restaurant.users.DTOs.UserRequest;
 import com.bazan.restaurant.users.DTOs.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -41,6 +39,19 @@ public class UserController {
         } catch (Exception e) {
             var response = LoginResponse.Failure(e.getMessage());
             return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponse> me(
+            @RequestHeader("Authorization") String auth
+    ){
+        try {
+            var user = userService.getUser(auth);
+            var response = UserResponse.Success("Success", user);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 }

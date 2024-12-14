@@ -3,6 +3,7 @@ package com.bazan.restaurant.users;
 import com.bazan.restaurant.shared.services.IJwtService;
 import com.bazan.restaurant.users.DTOs.LoginRequest;
 import com.bazan.restaurant.users.DTOs.UserRequest;
+import com.bazan.restaurant.users.DTOs.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserProfile create(UserRequest userProfile) {
+    public UserResponseDto create(UserRequest userProfile) {
         UserProfile user = UserProfile.Create(
                 userProfile.name(),
                 userProfile.email(),
@@ -31,7 +32,14 @@ public class UserService implements IUserService {
                 userProfile.birthDay(),
                 userProfile.role()
         );
-        return userRepository.save(user);
+        var createdUser = userRepository.save(user);
+        return new UserResponseDto(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getBirthDay(),
+                user.getRole()
+        );
     }
 
     @Override
@@ -45,5 +53,20 @@ public class UserService implements IUserService {
             throw new Exception("Invalid Credentials");
 
         return jwtService.generateToken(user);
+    }
+
+    @Override
+    public UserResponseDto getUser(String auth) throws Exception {
+        if (auth == null || !auth.startsWith("Bearer ")) throw new Exception("Missing Authentication");
+        String token = auth.substring(7);
+        var userEmail = this.jwtService.getUserEmailFromToken(token);
+        var user = userRepository.findByEmail(userEmail);
+        return new UserResponseDto(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getBirthDay(),
+                user.getRole()
+        );
     }
 }

@@ -1,15 +1,14 @@
 package com.bazan.restaurant.users.DTOs;
 
 import com.bazan.restaurant.shared.DTOs.Response;
-import com.bazan.restaurant.users.UserProfile;
 
-public class UserResponse extends Response<UserProfile> {
+public class UserResponse extends Response<UserResponseDto> {
 
-    private UserResponse(boolean success, String message, UserProfile data) {
+    private UserResponse(boolean success, String message, UserResponseDto data) {
         super(success, message, data);
     }
 
-    public static UserResponse Success(String message, UserProfile data) {
+    public static UserResponse Success(String message, UserResponseDto data) {
         return new UserResponse(true, message, data);
     }
 
