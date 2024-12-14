@@ -2,6 +2,7 @@ package com.bazan.restaurant.restaurants;
 
 import com.bazan.restaurant.menus.Menu;
 import com.bazan.restaurant.users.UserProfile;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,8 +29,8 @@ public class Restaurant {
     private LocalDateTime openAt;
     private LocalDateTime closeAt;
 
-    @OneToOne
-    @JoinColumn(name = "owner_id")
+    @ManyToOne
+    @JsonIgnore
     private UserProfile owner;
 
     @OneToMany(mappedBy = "restaurant")

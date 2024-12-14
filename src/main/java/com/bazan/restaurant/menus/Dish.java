@@ -24,12 +24,7 @@ public class Dish {
     private String description;
     private double unitPrice;
 
-    @ManyToMany
-    @JoinTable(
-            name = "menu_dish",
-            joinColumns = @JoinColumn(name = "dish_id"),
-            inverseJoinColumns = @JoinColumn(name = "menu_id")
-    )
+    @ManyToMany(mappedBy = "dishes")
     @JsonIgnore
     private List<Menu> menus = new ArrayList<>();
 

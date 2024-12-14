@@ -32,6 +32,15 @@ public class MenuService implements IMenuService {
                 menuRequest.price(),
                 restaurant
         );
+
+        var dishes = dishRepository.findAllById(menuRequest.dishes());
+
+        if (dishes.isEmpty()) {
+            throw new Exception("No dishes found for the given IDs");
+        }
+
+        menu.getDishes().addAll(dishes);
+
         return menuRepository.save(menu);
     }
 

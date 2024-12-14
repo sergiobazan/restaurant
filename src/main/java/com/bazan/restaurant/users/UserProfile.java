@@ -29,7 +29,8 @@ public class UserProfile implements UserDetails {
     private LocalDate birthDay;
     private String role;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "owner_id")
     @JsonIgnore
     private Set<Restaurant> restaurants = new HashSet<>();
 

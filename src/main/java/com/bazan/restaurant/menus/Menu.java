@@ -26,7 +26,12 @@ public class Menu {
     private LocalDate date;
     private double price;
 
-    @ManyToMany(mappedBy = "menus")
+    @ManyToMany(cascade = { CascadeType.MERGE })
+    @JoinTable(
+            name = "menu_dish",
+            joinColumns = @JoinColumn(name = "menu_id"),
+            inverseJoinColumns = @JoinColumn(name = "dish_id")
+    )
     private List<Dish> dishes = new ArrayList<>();
 
     @ManyToOne
