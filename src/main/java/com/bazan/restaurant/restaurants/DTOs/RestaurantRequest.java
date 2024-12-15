@@ -1,13 +1,13 @@
 package com.bazan.restaurant.restaurants.DTOs;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 public record RestaurantRequest(
         String name,
         String address,
         String description,
-        LocalDateTime openAt,
-        LocalDateTime closeAt,
+        LocalTime openAt,
+        LocalTime closeAt,
         long ownerId
 ) {
 }

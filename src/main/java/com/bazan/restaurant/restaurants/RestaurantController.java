@@ -4,10 +4,7 @@ import com.bazan.restaurant.restaurants.DTOs.RestaurantRequest;
 import com.bazan.restaurant.restaurants.DTOs.RestaurantResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -23,6 +20,20 @@ public class RestaurantController {
         try {
             var restaurant = restaurantService.create(restaurantRequest);
             var result = RestaurantResponse.Success("Restaurant created successfully", restaurant);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            var result = RestaurantResponse.Failure(e.getMessage());
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<RestaurantResponse> getById(
+            @PathVariable long id
+    ) {
+        try {
+            var restaurant = restaurantService.getById(id);
+            var result = RestaurantResponse.Success("Success", restaurant);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             var result = RestaurantResponse.Failure(e.getMessage());

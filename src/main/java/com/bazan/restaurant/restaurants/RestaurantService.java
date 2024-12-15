@@ -20,6 +20,13 @@ public class RestaurantService implements IRestaurantService {
     }
 
     @Override
+    public Restaurant getById(long id) throws Exception {
+        return restaurantRepository
+                .findById(id)
+                .orElseThrow(() -> new Exception("Restaurant was not found"));
+    }
+
+    @Override
     public Restaurant create(RestaurantRequest restaurantRequest) throws Exception {
         var owner = userRepository
                 .findById(restaurantRequest.ownerId())

@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,8 +26,8 @@ public class Restaurant {
     private String name;
     private String address;
     private String description;
-    private LocalDateTime openAt;
-    private LocalDateTime closeAt;
+    private LocalTime openAt;
+    private LocalTime closeAt;
 
     @ManyToOne
     @JsonIgnore
@@ -40,8 +40,8 @@ public class Restaurant {
             String name,
             String address,
             String description,
-            LocalDateTime openAt,
-            LocalDateTime closeAt,
+            LocalTime openAt,
+            LocalTime closeAt,
             UserProfile owner
     ) {
         this.name = name;
@@ -56,8 +56,8 @@ public class Restaurant {
             String name,
             String address,
             String description,
-            LocalDateTime openAt,
-            LocalDateTime closeAt,
+            LocalTime openAt,
+            LocalTime closeAt,
             UserProfile owner
     ) {
         return new Restaurant(name, address, description, openAt, closeAt, owner);
