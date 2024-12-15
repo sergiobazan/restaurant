@@ -34,7 +34,7 @@ public class Menu {
     )
     private List<Dish> dishes = new ArrayList<>();
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "restaurant_id")
     @JsonIgnore
     private Restaurant restaurant;

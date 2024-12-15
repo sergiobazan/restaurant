@@ -22,7 +22,9 @@ public class DishService implements IDishService {
         var dish = Dish.create(
                 dishRequest.name(),
                 dishRequest.description(),
-                dishRequest.unitPrice()
+                dishRequest.unitPrice(),
+                dishRequest.type(),
+                dishRequest.isAvailable()
         );
         return dishRepository.save(dish);
     }

@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -33,8 +31,8 @@ public class Restaurant {
     @JsonIgnore
     private UserProfile owner;
 
-    @OneToMany(mappedBy = "restaurant")
-    private Set<Menu> menus = new HashSet<>();
+    @OneToOne(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Menu menu;
 
     private Restaurant(
             String name,
