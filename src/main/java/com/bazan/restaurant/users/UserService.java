@@ -1,5 +1,7 @@
 package com.bazan.restaurant.users;
 
+import com.bazan.restaurant.restaurants.DTOs.RestaurantResponseDto;
+import com.bazan.restaurant.restaurants.IRestaurantRepository;
 import com.bazan.restaurant.shared.services.IJwtService;
 import com.bazan.restaurant.users.DTOs.LoginRequest;
 import com.bazan.restaurant.users.DTOs.UserRequest;
@@ -17,6 +19,7 @@ public class UserService implements IUserService {
     private final IUserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
     private final IJwtService jwtService;
+    private final IRestaurantRepository restaurantRepository;
 
     @Override
     public List<UserProfile> getAll() {
@@ -67,6 +70,23 @@ public class UserService implements IUserService {
                 user.getEmail(),
                 user.getBirthDay(),
                 user.getRole()
+        );
+    }
+
+    @Override
+    public RestaurantResponseDto getRestaurantByOwnerId(long id) throws Exception {
+        var restaurant = restaurantRepository
+                .findByOwnerId(id)
+                .orElseThrow(() -> new Exception("No restaurant was found"));
+
+        return new RestaurantResponseDto(
+                restaurant.getId(),
+                restaurant.getName(),
+                restaurant.getAddress(),
+                restaurant.getDescription(),
+                restaurant.getOpenAt(),
+                restaurant.getCloseAt(),
+                null
         );
     }
 }

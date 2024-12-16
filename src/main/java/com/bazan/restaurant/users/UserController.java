@@ -1,9 +1,6 @@
 package com.bazan.restaurant.users;
 
-import com.bazan.restaurant.users.DTOs.LoginRequest;
-import com.bazan.restaurant.users.DTOs.LoginResponse;
-import com.bazan.restaurant.users.DTOs.UserRequest;
-import com.bazan.restaurant.users.DTOs.UserResponse;
+import com.bazan.restaurant.users.DTOs.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -51,7 +48,22 @@ public class UserController {
             var response = UserResponse.Success("Success", user);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            var response = UserResponse.Failure(e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @GetMapping("/owners/{id}/restaurant")
+    public ResponseEntity<OwnerResponse> me(
+            @PathVariable("id") long id
+    ){
+        try {
+            var user = userService.getRestaurantByOwnerId(id);
+            var response = OwnerResponse.Success("Success", user);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            var response = OwnerResponse.Failure(e.getMessage());
+            return ResponseEntity.badRequest().body(response);
         }
     }
 }
