@@ -1,11 +1,15 @@
 package com.bazan.restaurant.restaurants;
 
+import com.bazan.restaurant.menus.Menu;
 import com.bazan.restaurant.restaurants.DTOs.RestaurantRequest;
+import com.bazan.restaurant.restaurants.DTOs.RestaurantResponseDto;
 import com.bazan.restaurant.users.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -20,10 +24,26 @@ public class RestaurantService implements IRestaurantService {
     }
 
     @Override
-    public Restaurant getById(long id) throws Exception {
-        return restaurantRepository
+    public RestaurantResponseDto getById(long id) throws Exception {
+        var restaurant = restaurantRepository
                 .findById(id)
                 .orElseThrow(() -> new Exception("Restaurant was not found"));
+
+        Optional<Menu> todayMenu = restaurant
+                .getMenus()
+                .stream()
+                .filter(m -> m.getDate().equals(LocalDate.now()))
+                .findFirst();
+
+        return new RestaurantResponseDto(
+                restaurant.getId(),
+                restaurant.getName(),
+                restaurant.getAddress(),
+                restaurant.getDescription(),
+                restaurant.getOpenAt(),
+                restaurant.getCloseAt(),
+                todayMenu
+        );
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.bazan.restaurant.restaurants;
 
 import com.bazan.restaurant.restaurants.DTOs.RestaurantRequest;
 import com.bazan.restaurant.restaurants.DTOs.RestaurantResponse;
+import com.bazan.restaurant.restaurants.DTOs.RestaurantResponseMenu;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,15 +29,15 @@ public class RestaurantController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<RestaurantResponse> getById(
+    public ResponseEntity<RestaurantResponseMenu> getById(
             @PathVariable long id
     ) {
         try {
             var restaurant = restaurantService.getById(id);
-            var result = RestaurantResponse.Success("Success", restaurant);
+            var result = RestaurantResponseMenu.Success("Success", restaurant);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
-            var result = RestaurantResponse.Failure(e.getMessage());
+            var result = RestaurantResponseMenu.Failure(e.getMessage());
             return ResponseEntity.badRequest().body(result);
         }
     }
