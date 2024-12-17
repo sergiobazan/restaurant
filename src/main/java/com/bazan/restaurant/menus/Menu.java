@@ -1,5 +1,6 @@
 package com.bazan.restaurant.menus;
 
+import com.bazan.restaurant.orders.Order;
 import com.bazan.restaurant.restaurants.Restaurant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -9,7 +10,9 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -33,6 +36,10 @@ public class Menu {
             inverseJoinColumns = @JoinColumn(name = "dish_id")
     )
     private List<Dish> dishes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<Order> orders = new HashSet<>();
 
     @ManyToOne
     @JsonIgnore

@@ -1,5 +1,6 @@
 package com.bazan.restaurant.users;
 
+import com.bazan.restaurant.orders.Order;
 import com.bazan.restaurant.restaurants.Restaurant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -33,6 +34,10 @@ public class UserProfile implements UserDetails {
     @JoinColumn(name = "owner_id")
     @JsonIgnore
     private Set<Restaurant> restaurants = new HashSet<>();
+
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<Order> orders = new HashSet<>();
 
     private UserProfile(String name, String email, String password, LocalDate birthDay, String role) {
         this.name = name;

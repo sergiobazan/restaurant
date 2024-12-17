@@ -1,6 +1,7 @@
 package com.bazan.restaurant.restaurants;
 
 import com.bazan.restaurant.menus.Menu;
+import com.bazan.restaurant.orders.Order;
 import com.bazan.restaurant.users.UserProfile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -10,7 +11,9 @@ import lombok.Setter;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -36,6 +39,10 @@ public class Restaurant {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "restaurant_id")
     private List<Menu> menus = new ArrayList<>();
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<Order> orders = new HashSet<>();
 
     private Restaurant(
             String name,
