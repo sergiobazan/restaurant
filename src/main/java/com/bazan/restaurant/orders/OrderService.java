@@ -90,4 +90,20 @@ public class OrderService implements IOrderService {
                 ))
                 .toList();
     }
+
+    @Override
+    public void updateStatus(long id, int status) throws Exception {
+        var order = orderRepository.findById(id)
+                .orElseThrow(() -> new Exception("Order not found"));
+        order.setStatus(OrderStatus.fromValue(status));
+        orderRepository.save(order);
+    }
+
+    @Override
+    public void updatePaymentStatus(long id, int paymentStatus) throws Exception {
+        var order = orderRepository.findById(id)
+                .orElseThrow(() -> new Exception("Order not found"));
+        order.setPaymentStatus(PaymentStatus.fromValue(paymentStatus));
+        orderRepository.save(order);
+    }
 }

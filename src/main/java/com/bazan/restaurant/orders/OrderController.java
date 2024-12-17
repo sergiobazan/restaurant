@@ -3,6 +3,7 @@ package com.bazan.restaurant.orders;
 import com.bazan.restaurant.orders.DTOs.OrderRequest;
 import com.bazan.restaurant.orders.DTOs.OrderResponse;
 import com.bazan.restaurant.orders.DTOs.OrderRestaurantResponse;
+import com.bazan.restaurant.shared.DTOs.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,6 +47,32 @@ public class OrderController {
         } catch (Exception e) {
             var result = OrderRestaurantResponse.Failure(e.getMessage());
             return ResponseEntity.badRequest().body(result);
+        }
+    }
+
+    @PutMapping("/{id}/status/{statusId}")
+    public ResponseEntity<Response<String>> updateStatus(
+            @PathVariable("id") long id,
+            @PathVariable("statusId") int statusId
+    ) {
+        try {
+            orderService.updateStatus(id, statusId);
+            return ResponseEntity.ok(new Response<String>(true, "Success", "Status updated"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new Response<String>(false, "Failure", e.getMessage()));
+        }
+    }
+
+    @PutMapping("/{id}/payment-status/{statusId}")
+    public ResponseEntity<Response<String>> updatePaymentStatus(
+            @PathVariable("id") long id,
+            @PathVariable("statusId") int statusId
+    ) {
+        try {
+            orderService.updatePaymentStatus(id, statusId);
+            return ResponseEntity.ok(new Response<String>(true, "Success", "Status updated"));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(new Response<String>(false, "Failure", e.getMessage()));
         }
     }
 }
