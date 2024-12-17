@@ -1,12 +1,16 @@
 package com.bazan.restaurant.orders;
 
+import com.bazan.restaurant.menus.Dish;
+import com.bazan.restaurant.menus.IDishRepository;
 import com.bazan.restaurant.menus.IMenuRepository;
 import com.bazan.restaurant.orders.DTOs.OrderRequest;
 import com.bazan.restaurant.restaurants.IRestaurantRepository;
 import com.bazan.restaurant.users.IUserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -17,21 +21,25 @@ public class OrderService implements IOrderService {
     private final IUserRepository userRepository;
     private final IMenuRepository menuRepository;
     private final IRestaurantRepository restaurantRepository;
+    private final IPriceCalculator priceCalculator;
+    private final IOrderItemRepository orderItemRepository;
+    private final IDishRepository dishRepository;
 
     @Override
     public List<Order> getAll() {
         return orderRepository.findAll();
     }
 
+    @Transactional
     @Override
     public Order create(OrderRequest orderRequest) throws Exception {
-        var client = this.userRepository
+        var client = userRepository
                 .findById(orderRequest.clientId())
                 .orElseThrow(() -> new Exception("Client not found"));
-        var menu = this.menuRepository
+        var menu = menuRepository
                 .findById(orderRequest.menuId())
                 .orElseThrow(() -> new Exception("Menu not found"));
-        var restaurant = this.restaurantRepository
+        var restaurant = restaurantRepository
                 .findById(orderRequest.restaurantId())
                 .orElseThrow(() -> new Exception("Restaurant not found"));
 
@@ -41,6 +49,21 @@ public class OrderService implements IOrderService {
                 restaurant,
                 orderRequest.description()
         );
-        return orderRepository.save(order);
+
+        Order orderSaved = orderRepository.save(order);
+
+        List<Dish> dishes = dishRepository.findAllById(orderRequest.dishIds());
+
+        List<OrderItem> orderItems = dishes.stream()
+                .map(dish -> new OrderItem(orderSaved, dish, dish.getUnitPrice()))
+                .toList();
+
+        List<OrderItem> orderItemList = orderItemRepository.saveAll(orderItems);
+
+        orderSaved.setOrderItems(new HashSet<>(orderItemList));
+
+        order.setTotalPrice(priceCalculator.calculatePrice(orderItemList));
+
+        return orderSaved;
     }
 }

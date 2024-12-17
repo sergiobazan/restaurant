@@ -1,5 +1,6 @@
 package com.bazan.restaurant.menus;
 
+import com.bazan.restaurant.orders.OrderItem;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -7,7 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -29,6 +32,10 @@ public class Dish {
     @ManyToMany(mappedBy = "dishes")
     @JsonIgnore
     private List<Menu> menus = new ArrayList<>();
+
+    @OneToMany(mappedBy = "dish")
+    @JsonIgnore
+    private Set<OrderItem> orderItems = new HashSet<>();
 
     private Dish(String name, String description, double unitPrice, DishType type, boolean isAvailable) {
         this.name = name;
