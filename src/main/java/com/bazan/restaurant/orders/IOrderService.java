@@ -8,7 +8,7 @@ import java.util.List;
 public interface IOrderService {
     List<Order> getAll();
     Order create(OrderRequest orderRequest) throws Exception;
-    List<OrderResponseDto> getOrderByRestaurantId(long restaurantId);
+    List<OrderResponseDto> getOrderByRestaurantId(long restaurantId, String range);
     void updateStatus(long id, int status) throws Exception;
     void updatePaymentStatus(long id, int paymentStatus) throws Exception;
 }

@@ -12,8 +12,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+
+import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
 @RequiredArgsConstructor
 @Service
@@ -70,8 +74,11 @@ public class OrderService implements IOrderService {
     }
 
     @Override
-    public List<OrderResponseDto> getOrderByRestaurantId(long restaurantId) {
-        List<Order> orders = orderRepository.getOrderByRestaurant(restaurantId);
+    public List<OrderResponseDto> getOrderByRestaurantId(long restaurantId, String range) {
+        LocalDate start = getStartDate(range);
+        LocalDate end = getEndDate(range);
+
+        List<Order> orders = orderRepository.getOrderByRestaurant(restaurantId, start, end);
         return orders.stream()
                 .map(order -> new OrderResponseDto(
                         order.getId(),
@@ -105,5 +112,27 @@ public class OrderService implements IOrderService {
                 .orElseThrow(() -> new Exception("Order not found"));
         order.setPaymentStatus(PaymentStatus.fromValue(paymentStatus));
         orderRepository.save(order);
+    }
+
+    private static LocalDate getStartDate(String range) {
+        LocalDate today = LocalDate.now();
+        return switch (range) {
+            case "today" -> today;
+            case "week" -> today.with(DayOfWeek.MONDAY);
+            case "month" -> today.withDayOfMonth(1);
+            case "all" -> LocalDate.of(1900, 1, 1);
+            default -> throw new IllegalArgumentException("Invalid range: " + range);
+        };
+    }
+
+    private static LocalDate getEndDate(String range) {
+        LocalDate today = LocalDate.now();
+        return switch (range) {
+            case "today" -> today;
+            case "week" -> today.with(DayOfWeek.SUNDAY);
+            case "month" -> today.with(lastDayOfMonth());
+            case "all" -> LocalDate.of(2050, 1, 1);
+            default -> throw new IllegalArgumentException("Invalid range: " + range);
+        };
     }
 }

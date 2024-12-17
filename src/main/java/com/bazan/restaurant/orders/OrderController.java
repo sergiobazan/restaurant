@@ -38,10 +38,11 @@ public class OrderController {
 
     @GetMapping("/restaurant/{id}")
     public ResponseEntity<OrderRestaurantResponse> getOrderByRestaurant(
-            @PathVariable("id") long id
+            @PathVariable("id") long id,
+            @RequestParam(defaultValue = "today") String date
     ) {
         try {
-            var orders = orderService.getOrderByRestaurantId(id);
+            var orders = orderService.getOrderByRestaurantId(id, date);
             var result = OrderRestaurantResponse.Success("Success", orders);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
