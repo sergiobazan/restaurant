@@ -3,7 +3,9 @@ package com.bazan.restaurant.orders;
 import com.bazan.restaurant.menus.Dish;
 import com.bazan.restaurant.menus.IDishRepository;
 import com.bazan.restaurant.menus.IMenuRepository;
+import com.bazan.restaurant.orders.DTOs.DishResponseDto;
 import com.bazan.restaurant.orders.DTOs.OrderRequest;
+import com.bazan.restaurant.orders.DTOs.OrderResponseDto;
 import com.bazan.restaurant.restaurants.IRestaurantRepository;
 import com.bazan.restaurant.users.IUserRepository;
 import jakarta.transaction.Transactional;
@@ -65,5 +67,27 @@ public class OrderService implements IOrderService {
         order.setTotalPrice(priceCalculator.calculatePrice(orderItemList));
 
         return orderSaved;
+    }
+
+    @Override
+    public List<OrderResponseDto> getOrderByRestaurantId(long restaurantId) {
+        List<Order> orders = orderRepository.getOrderByRestaurant(restaurantId);
+        return orders.stream()
+                .map(order -> new OrderResponseDto(
+                        order.getId(),
+                        order.getRestaurant().getId(),
+                        order.getMenu().getId(),
+                        order.getClient().getId(),
+                        order.getClient().getName(),
+                        order.getDescription(),
+                        order.getStatus(),
+                        order.getPaymentStatus(),
+                        order.getOrderItems().stream().map(oi -> new DishResponseDto(
+                                oi.getDish().getId(),
+                                oi.getDish().getName(),
+                                oi.getDish().getType()
+                        )).toList()
+                ))
+                .toList();
     }
 }

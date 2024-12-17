@@ -2,6 +2,7 @@ package com.bazan.restaurant.orders;
 
 import com.bazan.restaurant.orders.DTOs.OrderRequest;
 import com.bazan.restaurant.orders.DTOs.OrderResponse;
+import com.bazan.restaurant.orders.DTOs.OrderRestaurantResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,5 +33,19 @@ public class OrderController {
     @GetMapping
     public ResponseEntity<List<Order>> getAll() {
         return ResponseEntity.ok(this.orderService.getAll());
+    }
+
+    @GetMapping("/restaurant/{id}")
+    public ResponseEntity<OrderRestaurantResponse> getOrderByRestaurant(
+            @PathVariable("id") long id
+    ) {
+        try {
+            var orders = orderService.getOrderByRestaurantId(id);
+            var result = OrderRestaurantResponse.Success("Success", orders);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            var result = OrderRestaurantResponse.Failure(e.getMessage());
+            return ResponseEntity.badRequest().body(result);
+        }
     }
 }
