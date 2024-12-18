@@ -1,8 +1,11 @@
 package com.bazan.restaurant.users;
 
+import com.bazan.restaurant.orders.DTOs.DishResponseDto;
+import com.bazan.restaurant.orders.DTOs.OrderResponseDto;
 import com.bazan.restaurant.restaurants.DTOs.RestaurantResponseDto;
 import com.bazan.restaurant.restaurants.IRestaurantRepository;
 import com.bazan.restaurant.shared.services.IJwtService;
+import com.bazan.restaurant.users.DTOs.ClientOrderDto;
 import com.bazan.restaurant.users.DTOs.LoginRequest;
 import com.bazan.restaurant.users.DTOs.UserRequest;
 import com.bazan.restaurant.users.DTOs.UserResponseDto;
@@ -10,7 +13,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.util.List;
+
+import static java.time.temporal.TemporalAdjusters.lastDayOfMonth;
 
 @RequiredArgsConstructor
 @Service
@@ -88,5 +95,50 @@ public class UserService implements IUserService {
                 restaurant.getCloseAt(),
                 null
         );
+    }
+
+    @Override
+    public List<ClientOrderDto> getOrderByClientId(long clientId, String range) {
+        LocalDate start = getStartDate(range);
+        LocalDate end = getEndDate(range);
+        var orders = userRepository.getOrdersByClientId(clientId, start, end);
+        return orders.stream()
+                .map(order -> new ClientOrderDto(
+                        order.getClient().getId(),
+                        order.getClient().getName(),
+                        order.getRestaurant().getName(),
+                        order.getDescription(),
+                        order.getStatus(),
+                        order.getPaymentStatus(),
+                        order.getCreatedAt(),
+                        order.getOrderItems().stream().map(oi -> new DishResponseDto(
+                                oi.getDish().getId(),
+                                oi.getDish().getName(),
+                                oi.getDish().getType()
+                        )).toList()
+                ))
+                .toList();
+    }
+
+    private static LocalDate getStartDate(String range) {
+        LocalDate today = LocalDate.now();
+        return switch (range) {
+          case "today" -> today;
+          case "week" -> today.with(DayOfWeek.MONDAY);
+          case "month" -> today.withDayOfMonth(1);
+          case "all" -> LocalDate.of(1990, 1, 1);
+          default -> throw new IllegalArgumentException("Invalid range: " + range);
+        };
+    }
+
+    private static LocalDate getEndDate(String range) {
+        LocalDate today = LocalDate.now();
+        return switch (range) {
+            case "today" -> today;
+            case "week" -> today.with(DayOfWeek.SUNDAY);
+            case "month" -> today.with(lastDayOfMonth());
+            case "all" -> LocalDate.of(2050, 1, 1);
+            default -> throw new IllegalArgumentException("Invalid range: " + range);
+        };
     }
 }

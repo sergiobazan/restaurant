@@ -1,6 +1,8 @@
 package com.bazan.restaurant.users;
 
+import com.bazan.restaurant.orders.DTOs.OrderRestaurantResponse;
 import com.bazan.restaurant.users.DTOs.*;
+import jakarta.websocket.server.PathParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -63,6 +65,21 @@ public class UserController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             var response = OwnerResponse.Failure(e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
+    }
+
+    @GetMapping("/clients/{id}/orders")
+    public ResponseEntity<ClientOrderResponse> getOrders(
+            @PathVariable("id") long id,
+            @RequestParam(defaultValue = "today") String date
+    ) {
+        try {
+            var user = userService.getOrderByClientId(id, date);
+            var response = ClientOrderResponse.Success("Success", user);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            var response = ClientOrderResponse.Failure(e.getMessage());
             return ResponseEntity.badRequest().body(response);
         }
     }
