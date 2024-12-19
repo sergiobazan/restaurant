@@ -26,6 +26,9 @@ public class MenuService implements IMenuService {
                 .findById(menuRequest.restaurantId())
                 .orElseThrow(() -> new Exception("Restaurant with given Id not found"));
 
+        if (menuRepository.existsMenuInRestaurant(menuRequest.restaurantId(), menuRequest.date()))
+            throw new Exception("Restaurant already have a menu for this date");
+
         var menu = Menu.create(
                 menuRequest.name(),
                 menuRequest.date(),
