@@ -33,7 +33,8 @@ public class Menu {
     @JoinTable(
             name = "menu_dish",
             joinColumns = @JoinColumn(name = "menu_id"),
-            inverseJoinColumns = @JoinColumn(name = "dish_id")
+            inverseJoinColumns = @JoinColumn(name = "dish_id"),
+            uniqueConstraints = @UniqueConstraint(columnNames = { "menu_id", "dish_id" })
     )
     private List<Dish> dishes = new ArrayList<>();
 
