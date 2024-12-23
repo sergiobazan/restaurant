@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${ DB_URL }
-    username: ${ DB_USERNAME }
-    password: ${ DB_PASSWORD }
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
@@ -10,4 +10,4 @@ spring:
 
 security:
   jwt:
-    key: ${ JWT_SECRET_KEY }
+    key: ${JWT_SECRET_KEY}
