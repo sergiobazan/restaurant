@@ -6,8 +6,8 @@ on:
       - main
 
 jobs:
-  build-deploy:
-    name: Build and Deploy App
+  build:
+    name: Build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -41,3 +41,18 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/restaurantj:latest
+
+  deploy:
+    name: Deploy to EC2
+    needs: build-deploy
+    runs-on: aws-ec2
+    steps:
+      - name: Pull Docker image
+        run: docker pull ${{ secrets.DOCKERHUB_USERNAME }}/restaurantj:latest
+
+      - name: Delete Old Container
+        run: docker rm -f restaurant-app-container
+
+      - name: Run Docker Container
+        run: docker run -d -p 8080:8080 --name restaurant-app-container ${{ secrets.DOCKERHUB_USERNAME }}/restaurantj
+
