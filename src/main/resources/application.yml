@@ -10,4 +10,4 @@ spring:
 
 security:
   jwt:
-    key: ${JWT_SECRET_KEY}
+    key: asdnaslkdnaslkdnaskldnaskldansldkandsa21oj30i120naskd
