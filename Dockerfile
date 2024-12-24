@@ -1,13 +1,5 @@
-FROM eclipse-temurin:21-alpine as builder
+FROM eclipse-temurin:21-alpine
 WORKDIR /app
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-RUN chmod +x mvnw && ./mvnw dependency:go-offline
-COPY ./src ./src
-RUN chmod +x mvnw && ./mvnw clean install
-
-FROM eclipse-temurin:21.0.2_13-jre-jammy as final
-WORKDIR /app
+COPY target/restaurant-0.0.1-SNAPSHOT.jar /app/restaurant-app.jar
 EXPOSE 8080
-COPY --from=builder /app/target/*.jar /app/*.jar
-ENTRYPOINT ["java", "-jar", "/app/*.jar"]
+CMD ["java", "-jar", "restaurant-app.jar"]
