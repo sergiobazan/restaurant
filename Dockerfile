@@ -4,7 +4,7 @@ COPY .mvn/ .mvn
 COPY mvnw pom.xml ./
 RUN chmod +x mvnw && ./mvnw dependency:go-offline
 COPY ./src ./src
-RUN ./mvnw clean install
+RUN chmod +x mvnw && ./mvnw clean install
 
 FROM eclipse-temurin:21.0.2_13-jre-jammy as final
 WORKDIR /app
