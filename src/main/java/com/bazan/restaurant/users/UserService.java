@@ -89,6 +89,7 @@ public class UserService implements IUserService {
         return new RestaurantResponseDto(
                 restaurant.getId(),
                 restaurant.getName(),
+                restaurant.getSlug(),
                 restaurant.getAddress(),
                 restaurant.getDescription(),
                 restaurant.getOpenAt(),

@@ -11,4 +11,5 @@ public interface IRestaurantService {
     RestaurantResponseDto getById(long id) throws Exception;
     Restaurant create(RestaurantRequest restaurantRequest) throws Exception;
     List<Dish> getAllDishes(long id) throws Exception;
+    RestaurantResponseDto getBySlug(String slug) throws Exception;
 }

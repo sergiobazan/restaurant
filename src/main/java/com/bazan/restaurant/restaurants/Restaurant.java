@@ -3,6 +3,7 @@ package com.bazan.restaurant.restaurants;
 import com.bazan.restaurant.menus.Dish;
 import com.bazan.restaurant.menus.Menu;
 import com.bazan.restaurant.orders.Order;
+import com.bazan.restaurant.shared.services.ISlugService;
 import com.bazan.restaurant.users.UserProfile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -28,6 +29,7 @@ public class Restaurant {
     private long id;
 
     private String name;
+    private String slug;
     private String address;
     private String description;
     private LocalTime openAt;
@@ -51,6 +53,7 @@ public class Restaurant {
 
     private Restaurant(
             String name,
+            String slug,
             String address,
             String description,
             LocalTime openAt,
@@ -58,6 +61,7 @@ public class Restaurant {
             UserProfile owner
     ) {
         this.name = name;
+        this.slug = slug;
         this.address = address;
         this.description = description;
         this.openAt = openAt;
@@ -71,8 +75,10 @@ public class Restaurant {
             String description,
             LocalTime openAt,
             LocalTime closeAt,
-            UserProfile owner
+            UserProfile owner,
+            ISlugService slugService
     ) {
-        return new Restaurant(name, address, description, openAt, closeAt, owner);
+        String slug = slugService.getSlug(name, String.valueOf(owner.getId()));
+        return new Restaurant(name, slug, address, description, openAt, closeAt, owner);
     }
 }

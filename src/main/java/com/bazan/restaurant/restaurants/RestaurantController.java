@@ -29,6 +29,20 @@ public class RestaurantController {
         }
     }
 
+    @GetMapping("/slug/{slug}")
+    public ResponseEntity<RestaurantResponseMenu> getRestaurantBySlug(
+            @PathVariable("slug") String slug
+    ) {
+        try {
+            var restaurant = restaurantService.getBySlug(slug);
+            var result = RestaurantResponseMenu.Success("Success", restaurant);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            var result = RestaurantResponseMenu.Failure(e.getMessage());
+            return ResponseEntity.badRequest().body(result);
+        }
+    }
+
     @GetMapping("{id}")
     public ResponseEntity<RestaurantResponseMenu> getById(
             @PathVariable long id

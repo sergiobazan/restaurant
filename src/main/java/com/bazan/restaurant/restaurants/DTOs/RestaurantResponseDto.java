@@ -8,6 +8,7 @@ import java.util.Optional;
 public record RestaurantResponseDto(
         long id,
         String name,
+        String slug,
         String address,
         String description,
         LocalTime openAt,
