@@ -1,5 +1,6 @@
 package com.bazan.restaurant.restaurants;
 
+import com.bazan.restaurant.restaurants.DTOs.RestaurantDishResponse;
 import com.bazan.restaurant.restaurants.DTOs.RestaurantRequest;
 import com.bazan.restaurant.restaurants.DTOs.RestaurantResponse;
 import com.bazan.restaurant.restaurants.DTOs.RestaurantResponseMenu;
@@ -40,5 +41,20 @@ public class RestaurantController {
             var result = RestaurantResponseMenu.Failure(e.getMessage());
             return ResponseEntity.badRequest().body(result);
         }
+    }
+
+    @GetMapping("{id}/dishes")
+    public ResponseEntity<RestaurantDishResponse> getAllDishes(
+            @PathVariable("id") long id
+    ){
+        try {
+            var dishes = restaurantService.getAllDishes(id);
+            var result = RestaurantDishResponse.Success("Success", dishes);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            var result = RestaurantDishResponse.Failure(e.getMessage());
+            return ResponseEntity.badRequest().body(result);
+        }
+
     }
 }

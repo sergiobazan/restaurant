@@ -1,6 +1,7 @@
 package com.bazan.restaurant.menus;
 
 import com.bazan.restaurant.orders.OrderItem;
+import com.bazan.restaurant.restaurants.Restaurant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -37,15 +38,21 @@ public class Dish {
     @JsonIgnore
     private Set<OrderItem> orderItems = new HashSet<>();
 
-    private Dish(String name, String description, double unitPrice, DishType type, boolean isAvailable) {
+    @ManyToOne
+    @JoinColumn(name = "restaurant_id")
+    @JsonIgnore
+    private Restaurant restaurant;
+
+    private Dish(String name, String description, double unitPrice, DishType type, boolean isAvailable, Restaurant restaurant) {
         this.name = name;
         this.description = description;
         this.unitPrice = unitPrice;
         this.type = type;
         this.isAvailable = isAvailable;
+        this.restaurant = restaurant;
     }
 
-    public static Dish create(String name, String description, double unitPrice, DishType type, boolean isAvailable) {
-        return new Dish(name, description, unitPrice, type, isAvailable);
+    public static Dish create(String name, String description, double unitPrice, DishType type, boolean isAvailable, Restaurant restaurant) {
+        return new Dish(name, description, unitPrice, type, isAvailable, restaurant);
     }
 }

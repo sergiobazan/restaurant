@@ -1,5 +1,6 @@
 package com.bazan.restaurant.restaurants;
 
+import com.bazan.restaurant.menus.Dish;
 import com.bazan.restaurant.menus.Menu;
 import com.bazan.restaurant.orders.Order;
 import com.bazan.restaurant.users.UserProfile;
@@ -43,6 +44,10 @@ public class Restaurant {
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<Order> orders = new HashSet<>();
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<Dish> dishes = new HashSet<>();
 
     private Restaurant(
             String name,

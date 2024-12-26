@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface IDishService {
     List<Dish> getAll();
-    Dish create(DishRequest dishRequest);
+    Dish create(DishRequest dishRequest) throws Exception;
 }
 

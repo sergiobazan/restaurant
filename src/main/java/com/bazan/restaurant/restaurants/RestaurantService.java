@@ -1,5 +1,6 @@
 package com.bazan.restaurant.restaurants;
 
+import com.bazan.restaurant.menus.Dish;
 import com.bazan.restaurant.menus.Menu;
 import com.bazan.restaurant.restaurants.DTOs.RestaurantRequest;
 import com.bazan.restaurant.restaurants.DTOs.RestaurantResponseDto;
@@ -64,5 +65,15 @@ public class RestaurantService implements IRestaurantService {
                 owner
         );
         return restaurantRepository.save(restaurant);
+    }
+
+    @Override
+    public List<Dish> getAllDishes(long id) throws Exception {
+        return restaurantRepository
+                .findById(id)
+                .orElseThrow(() -> new Exception("Restaurant was not found"))
+                .getDishes()
+                .stream()
+                .toList();
     }
 }
