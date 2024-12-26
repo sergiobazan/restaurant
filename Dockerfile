@@ -1,17 +1,18 @@
-FROM eclipse-temurin:21-alpine as BUILDER
+FROM maven:3.9.4-eclipse-temurin-21 AS BUILDER
 
 WORKDIR /app
 
+COPY pom.xml mvnw ./
 COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-RUN ./mvnw dependency:go-offline
-COPY /src ./src
-RUN ./mvnw clean install
+RUN chmod +x mvnw
+RUN ./mvnw dependency:go-offlin
+COPY src ./src
+RUN ./mvnw clean install -DskipTest
 
-FROM eclipse-temurin:21.0.2_13-jre-jammy as RUNNER
+FROM eclipse-temurin:21.0.2_13-jre-jammy AS RUNNER
 
 WORKDIR /app
-
 EXPOSE 8080
-COPY --from=BUILDER /app/target/*.jar /app/*.jar
-ENTRYPOINT ["java", "-jar", "/app/*.jar"]
+COPY --from=BUILDER /app/target/*.jar /app/app.jar
+
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
