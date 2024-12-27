@@ -26,6 +26,7 @@ public class Menu {
     private long id;
 
     private String name;
+    @Column(unique = true)
     private LocalDate date;
     private double price;
 
