@@ -23,6 +23,8 @@ public class JwtService implements IJwtService {
     @Value("${security.jwt.key}")
     private String secretKey;
 
+    private static final long FIFTEEN_DAYS_IN_MS = 15 * 24 * 60 * 60 * 1000;
+
     @Override
     public String generateToken(UserProfile user) {
         Map<String, Object> claims = new HashMap<>();
@@ -38,7 +40,7 @@ public class JwtService implements IJwtService {
                 .add(claims)
                 .subject(user.getEmail())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 15 * 60 * 1000))
+                .expiration(new Date(System.currentTimeMillis() + FIFTEEN_DAYS_IN_MS))
                 .and()
                 .signWith(getKey())
                 .compact();
